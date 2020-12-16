@@ -1,0 +1,18 @@
+spring:
+    jpa:
+        database: postgresql  
+        hibernate:  
+            ddl-auto: create  
+        database-platform: org.hibernate.dialect.PostgreSQLDialect
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/library
+        username: postgres
+        password: admin
+
+endpoints:
+    book-endpoint: http://localhost:10011/api/books
+    user-endpoint: http://localhost:10010/api/users
+    
+server:
+    port: 10012
