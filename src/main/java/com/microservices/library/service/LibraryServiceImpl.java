@@ -2,6 +2,8 @@ package com.microservices.library.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -93,7 +95,7 @@ public class LibraryServiceImpl implements LibraryService {
 		return isIssued;
 	}
 
-	@Override
+	@Transactional
 	public boolean releaseBook(Long userID, Long bookID) {
 		issuedBooksRepository.deleteByUserIDAndBookID(userID, bookID);
 		return !issuedBooksRepository.existsByUserIDAndBookID(userID, bookID);
