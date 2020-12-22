@@ -5,12 +5,8 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import com.microservices.library.configuration.EndpointsConfiguration;
 import com.microservices.library.dto.Book;
 import com.microservices.library.dto.User;
 import com.microservices.library.entity.IssuedBook;
@@ -23,27 +19,26 @@ public class LibraryServiceImpl implements LibraryService {
 	private IssuedBooksRepository issuedBooksRepository;
 	
 	@Autowired
-	private RestTemplate restTemplate;
+	private UserService userService;
 	
-	@Autowired 
-	private EndpointsConfiguration endpointsConfiguration;
+	@Autowired
+	private BookService bookService;
 
 	public List<Book> getAllBooks() {
-		return restTemplate.exchange(endpointsConfiguration.getBookEndpoint(), HttpMethod.GET, null,
-				new ParameterizedTypeReference<List<Book>>() {}).getBody();
+		return bookService.getBooks();
 	}
 
 	public Book getBookByID(Long bookID) {
-		return restTemplate.getForObject(endpointsConfiguration.getBookEndpoint() + "/" + bookID, Book.class);
+		return bookService.getBookByID(bookID);
 	}
 
 	public Book addBook(Book book) {
-		return restTemplate.postForObject(endpointsConfiguration.getBookEndpoint(), book, Book.class);
+		return bookService.addBook(book);
 	}
 
 	public boolean deleteBook(Long bookID) {
 		boolean isDeleted = true;
-		restTemplate.delete(endpointsConfiguration.getBookEndpoint() + "/" + bookID);
+		bookService.deleteBook(bookID);
 		Book book = getBookByID(bookID);
 		if (book != null && book.getId() != null) {
 			isDeleted = false;
@@ -52,21 +47,20 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	public List<User> getAllUsers() {
-		return restTemplate.exchange(endpointsConfiguration.getUserEndpoint(), HttpMethod.GET, null,
-				new ParameterizedTypeReference<List<User>>() {}).getBody();
+		return userService.getUsers();
 	}
 
 	public User getUserByID(Long userID) {
-		return restTemplate.getForObject(endpointsConfiguration.getUserEndpoint() + "/" + userID, User.class);
+		return userService.getUserByID(userID);
 	}
 
 	public User addUser(User user) {
-		return restTemplate.postForObject(endpointsConfiguration.getUserEndpoint(), user, User.class);
+		return userService.addUser(user);
 	}
 
 	public boolean deleteUser(Long userID) {
 		boolean isDeleted = true;
-		restTemplate.delete(endpointsConfiguration.getUserEndpoint() + "/" + userID);
+		userService.deleteUser(userID);
 		User user = getUserByID(userID);
 		if (user != null && user.getId() != null) {
 			isDeleted = false;
@@ -76,7 +70,7 @@ public class LibraryServiceImpl implements LibraryService {
 
 	@Override
 	public User updateUser(Long userID, User user) {
-		restTemplate.put(endpointsConfiguration.getUserEndpoint() + "/" + userID, user);
+		userService.updateUser(userID, user);
 		return getUserByID(userID);
 	}
 
