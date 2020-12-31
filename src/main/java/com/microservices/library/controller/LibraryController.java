@@ -54,12 +54,8 @@ public class LibraryController {
 	}
 	
 	@DeleteMapping("/books/{book_id}")
-	public String deleteBook(@PathVariable(name = "book_id") Long bookID) {
-		String result = "Delete Unsuccessful";
-		if (libraryService.deleteBook(bookID)) {
-			result = "Delete Successful";
-		}
-		return result;
+	public boolean deleteBook(@PathVariable(name = "book_id") Long bookID) {
+		return libraryService.deleteBook(bookID);
 	}
 	
 	@GetMapping("/users")
@@ -78,12 +74,8 @@ public class LibraryController {
 	}
 	
 	@DeleteMapping("/users/{user_id}")
-	public String deleteUser(@PathVariable(name = "user_id") Long userID) {
-		String result = "Delete Unsuccessful";
-		if (libraryService.deleteUser(userID)) {
-			result = "Delete Successful";
-		}
-		return result;
+	public boolean deleteUser(@PathVariable(name = "user_id") Long userID) {
+		return libraryService.deleteUser(userID);
 	}
 	
 	@PutMapping("users/{user_id}")

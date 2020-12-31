@@ -27,7 +27,7 @@ public interface UserService {
 	public User addUser(@RequestBody User user);
 	
 	@DeleteMapping("/users/{user_id}")
-	public String deleteUser(@PathVariable(name = "user_id") Long userID);
+	public boolean deleteUser(@PathVariable(name = "user_id") Long userID);
 	
 	@PutMapping("users/{user_id}")
 	public User updateUser(@PathVariable(name = "user_id") Long userID, @RequestBody User user);

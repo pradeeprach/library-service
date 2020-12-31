@@ -27,7 +27,7 @@ public interface BookService {
 	public Book addBook(@RequestBody Book book);
 	
 	@DeleteMapping("/books/{book_id}")
-	public String deleteBook(@PathVariable(name = "book_id") Long bookID);
+	public boolean deleteBook(@PathVariable(name = "book_id") Long bookID);
 	
 	@PutMapping("books/{book_id}")
 	public Book updateBook(@PathVariable(name = "book_id") Long bookID, @RequestBody Book book);

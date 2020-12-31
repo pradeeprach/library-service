@@ -37,13 +37,7 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	public boolean deleteBook(Long bookID) {
-		boolean isDeleted = true;
-		bookService.deleteBook(bookID);
-		Book book = getBookByID(bookID);
-		if (book != null && book.getId() != null) {
-			isDeleted = false;
-		}
-		return isDeleted;
+		return bookService.deleteBook(bookID);
 	}
 
 	public List<User> getAllUsers() {
@@ -59,13 +53,7 @@ public class LibraryServiceImpl implements LibraryService {
 	}
 
 	public boolean deleteUser(Long userID) {
-		boolean isDeleted = true;
-		userService.deleteUser(userID);
-		User user = getUserByID(userID);
-		if (user != null && user.getId() != null) {
-			isDeleted = false;
-		}
-		return isDeleted;
+		return userService.deleteUser(userID);
 	}
 
 	@Override
