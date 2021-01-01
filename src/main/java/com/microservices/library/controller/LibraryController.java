@@ -1,5 +1,6 @@
 package com.microservices.library.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.microservices.library.dto.Book;
 import com.microservices.library.dto.User;
 import com.microservices.library.service.LibraryService;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
 @RestController
 @RequestMapping("/api/library")
@@ -24,8 +27,20 @@ public class LibraryController {
 	private LibraryService libraryService;
 	
 	@GetMapping("/books")
+	@HystrixCommand(fallbackMethod = "getFallbackResponseForAllBooks",
+	commandProperties = {
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000"),
+			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+			@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
+			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "10000")
+		}
+	)
 	public List<Book> getAllBooks() {
 		return libraryService.getAllBooks();
+	}
+
+	public List<Book> getFallbackResponseForAllBooks() {
+		return new ArrayList<>();
 	}
 	
 	@GetMapping("/books/{book_id}")
@@ -39,12 +54,8 @@ public class LibraryController {
 	}
 	
 	@DeleteMapping("/books/{book_id}")
-	public String deleteBook(@PathVariable(name = "book_id") Long bookID) {
-		String result = "Delete Unsuccessful";
-		if (libraryService.deleteBook(bookID)) {
-			result = "Delete Successful";
-		}
-		return result;
+	public boolean deleteBook(@PathVariable(name = "book_id") Long bookID) {
+		return libraryService.deleteBook(bookID);
 	}
 	
 	@GetMapping("/users")
@@ -63,12 +74,8 @@ public class LibraryController {
 	}
 	
 	@DeleteMapping("/users/{user_id}")
-	public String deleteUser(@PathVariable(name = "user_id") Long userID) {
-		String result = "Delete Unsuccessful";
-		if (libraryService.deleteUser(userID)) {
-			result = "Delete Successful";
-		}
-		return result;
+	public boolean deleteUser(@PathVariable(name = "user_id") Long userID) {
+		return libraryService.deleteUser(userID);
 	}
 	
 	@PutMapping("users/{user_id}")
